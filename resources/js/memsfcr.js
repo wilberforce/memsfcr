@@ -849,8 +849,19 @@ function loadedScenarios(event) {
     var replay = $('#replayList');
 
     data.forEach(function (s) {
-        var scenario = '<a href="#" onclick=selectScenario("' + s.name + '") id="' + s.name + '" class="scenario list-group-item list-group-item-action">' + s.name + '</a>'
-        console.debug("added scenario " + scenario)
+        var scenario = '<a href="#" onclick=selectScenario("' + s.name + '") id="' + s.name + '" class="scenario list-group-item list-group-item-action" >'
+        if (s.FileType === "CSV") {
+            scenario += '<i class="fas fa-file-csv" style="font-size: 1.75em; color: #0f6674"></i>'
+        }
+        if (s.FileType === "FCR") {
+            scenario += '<i class="fa fa-stethoscope" style="font-size: 1.5em; color: sienna"></i>'
+        }
+        scenario += '&nbsp;' + s.name
+        scenario += '<span><br><small>' + s.Date.slice(0,10) + ' ' + s.Date.slice(11,16) + ', ' + s.Duration + ''
+        scenario += '<br>' + s.Summary + '</small></span>'
+        scenario += '</a>'
+
+        console.debug("added scenario " + s.name)
         replay.append(scenario);
     });
 
@@ -1012,7 +1023,7 @@ function connected(event) {
     var responseData = JSON.parse(event.target.response)
     console.info("connected to ecu (" + JSON.stringify(responseData) + ")")
 
-    memsreader.status.connected = responseData.Initialised
+    memsreader.status.connected = responseData.Connected
 
     updateConnectMessage()
     setStatusLED(memsreader.status.connected, IndicatorECUConnected, LEDStatus)
